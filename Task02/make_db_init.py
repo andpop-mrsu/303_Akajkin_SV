@@ -12,7 +12,7 @@ sqlScript.write("DROP TABLE IF EXISTS `tags`;\n")
 sqlScript.write("""CREATE TABLE `movies` (
 	\'id\' INTEGER(8) PRIMARY KEY,
 	\'title\' VARCHAR NOT NULL,
-	\'year\' VARCHAR(8),
+	\'year\' VARCHAR,
 	\'genres\' VARCHAR NOT NULL);\n""")
 
 
@@ -27,7 +27,7 @@ for line in movies:
 	sqlTask += "("
 	id_val = line[: line.find(",")]
 	title = line[line.find(",") + 1 : line.rfind(",")]
-	title = title.replace("\'", "\'\'").replace("\"", "\"\"")
+	title = title.replace("\'", "\'\'")#.replace("\"", "")
 
 	genres = line[line.rfind(",") + 1 : len(line) - 1]
 	year = ""
