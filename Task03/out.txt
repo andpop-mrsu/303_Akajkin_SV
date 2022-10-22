@@ -1,0 +1,405 @@
+1. Составить список фильмов, имеющих хотя бы одну оценку. Список фильмов отсортировать по году выпуска и по названиям. В списке оставить первые 10 фильмов.
+--------------------------------------------------
+SELECT movies.title, movies.year FROM movies INNER JOIN ratings ON ratings.movie_id=movies.id GROUP BY movies.title HAVING count(*) >= 1 ORDER BY movies.year, movies.title LIMIT 10;
+┌────────────────────────────────────────────────────────┬──────┐
+│                         title                          │ year │
+├────────────────────────────────────────────────────────┼──────┤
+│ Black Mirror                                           │      │
+│ Generation Iron 2                                      │      │
+│ Maria Bamford: Old Baby                                │      │
+│ The Adventures of Sherlock Holmes and Doctor Watson    │      │
+│ "Trip to the Moon, A (Voyage dans la lune, Le) (1902)" │ 1902 │
+│ The Electric Hotel (1908)                              │ 1908 │
+│ "20,000 Leagues Under the Sea (1916)"                  │ 1916 │
+│ "Rink, The (1916)"                                     │ 1916 │
+│ "Immigrant, The (1917)"                                │ 1917 │
+│ One Week (1920)                                        │ 1920 │
+└────────────────────────────────────────────────────────┴──────┘
+ 
+2. Вывести список всех пользователей, фамилии (не имена!) которых начинаются на букву 'A'. Полученный список отсортировать по дате регистрации. В списке оставить первых 5 пользователей.
+--------------------------------------------------
+SELECT name FROM users WHERE substr(substr(name, instr(name, ' ')+1), 1, 1)='A' ORDER BY register_date LIMIT 10;
+┌────────────────────┐
+│        name        │
+├────────────────────┤
+│ Callie Abshire     │
+│ Jena Abernathy     │
+│ Deron Altenwerth   │
+│ Lilliana Abernathy │
+│ Quinton Anderson   │
+│ Michaela Anderson  │
+│ Marcellus Adams    │
+│ Eloy Armstrong     │
+│ Victor Abshire     │
+│ Melody Abshire     │
+└────────────────────┘
+ 
+3. Написать запрос, возвращающий информацию о рейтингах в более читаемом формате: имя и фамилия эксперта, название фильма, год выпуска, оценка и дата оценки в формате ГГГГ-ММ-ДД. Отсортировать данные по имени эксперта, затем названию фильма и оценке. В списке оставить первые 50 записей.
+--------------------------------------------------
+SELECT name, title, year, rating, date(timestamp, 'unixepoch') AS date FROM users INNER JOIN ratings ON users.id=ratings.user_id INNER JOIN movies ON ratings.movie_id=movies.id ORDER BY substr(name, 1, instr(name, ' ')-1), title, rating LIMIT 50;
+┌──────────────────┬──────────────────────────────────────────────────────────────────────────┬──────┬────────┬────────────┐
+│       name       │                                  title                                   │ year │ rating │    date    │
+├──────────────────┼──────────────────────────────────────────────────────────────────────────┼──────┼────────┼────────────┤
+│ Adell Gusikowski │ "2 Fast 2 Furious (Fast and the Furious 2, The) (2003)"                  │ 2003 │ 3.0    │ 2015-11-05 │
+│ Adell Gusikowski │ "40-Year-Old Virgin, The (2005)"                                         │ 2005 │ 3.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "400 Blows, The (Les quatre cents coups) (1959)"                         │ 1959 │ 4.0    │ 2015-11-22 │
+│ Adell Gusikowski │ "Adjustment Bureau, The (2011)"                                          │ 2011 │ 3.5    │ 2015-11-15 │
+│ Adell Gusikowski │ "Aguirre: The Wrath of God (Aguirre, der Zorn Gottes) (1972)"            │ 1972 │ 3.5    │ 2015-11-03 │
+│ Adell Gusikowski │ "Amelie (Fabuleux destin d'Amélie Poulain, Le) (2001)"                   │ 2001 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Apartment, The (1960)"                                                  │ 1960 │ 4.0    │ 2015-11-15 │
+│ Adell Gusikowski │ "Avengers, The (2012)"                                                   │ 2012 │ 3.5    │ 2015-11-03 │
+│ Adell Gusikowski │ "Aviator, The (2004)"                                                    │ 2004 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Band Wagon, The (1953)"                                                 │ 1953 │ 4.0    │ 2018-05-13 │
+│ Adell Gusikowski │ "Beach, The (2000)"                                                      │ 2000 │ 4.0    │ 2015-11-05 │
+│ Adell Gusikowski │ "Beautiful Mind, A (2001)"                                               │ 2001 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Best Offer, The (Migliore offerta, La) (2013)"                          │ 2013 │ 4.5    │ 2015-11-15 │
+│ Adell Gusikowski │ "Black Cat, White Cat (Crna macka, beli macor) (1998)"                   │ 1998 │ 5.0    │ 2015-11-13 │
+│ Adell Gusikowski │ "Blind Side, The  (2009)"                                                │ 2009 │ 4.0    │ 2015-11-06 │
+│ Adell Gusikowski │ "Boondock Saints, The (2000)"                                            │ 2000 │ 4.5    │ 2015-11-22 │
+│ Adell Gusikowski │ "Boot, Das (Boat, The) (1981)"                                           │ 1981 │ 4.0    │ 2015-11-15 │
+│ Adell Gusikowski │ "Bourne Identity, The (2002)"                                            │ 2002 │ 3.5    │ 2015-11-03 │
+│ Adell Gusikowski │ "Bourne Supremacy, The (2004)"                                           │ 2004 │ 3.5    │ 2015-11-04 │
+│ Adell Gusikowski │ "Brotherhood of the Wolf (Pacte des loups, Le) (2001)"                   │ 2001 │ 4.0    │ 2015-11-06 │
+│ Adell Gusikowski │ "Brothers Grimm, The (2005)"                                             │ 2005 │ 3.0    │ 2015-11-15 │
+│ Adell Gusikowski │ "Celebration, The (Festen) (1998)"                                       │ 1998 │ 4.0    │ 2015-11-22 │
+│ Adell Gusikowski │ "Chorus, The (Choristes, Les) (2004)"                                    │ 2004 │ 4.5    │ 2015-11-03 │
+│ Adell Gusikowski │ "Chronicles of Narnia: The Lion, the Witch and the Wardrobe, The (2005)" │ 2005 │ 3.5    │ 2015-11-05 │
+│ Adell Gusikowski │ "Circus, The (1928)"                                                     │ 1928 │ 4.5    │ 2015-11-13 │
+│ Adell Gusikowski │ "Class, The (Klass) (2007)"                                              │ 2007 │ 2.0    │ 2015-11-14 │
+│ Adell Gusikowski │ "Clockwork Orange, A (1971)"                                             │ 1971 │ 5.0    │ 2015-11-15 │
+│ Adell Gusikowski │ "Conformist, The (Conformista, Il) (1970)"                               │ 1970 │ 3.5    │ 2015-11-13 │
+│ Adell Gusikowski │ "Cranes Are Flying, The (Letyat zhuravli) (1957)"                        │ 1957 │ 4.0    │ 2015-11-15 │
+│ Adell Gusikowski │ "Crouching Tiger, Hidden Dragon (Wo hu cang long) (2000)"                │ 2000 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Cruel Romance, A (Zhestokij Romans) (1984)"                             │ 1984 │ 5.0    │ 2018-05-13 │
+│ Adell Gusikowski │ "Curious Case of Benjamin Button, The (2008)"                            │ 2008 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Da Vinci Code, The (2006)"                                              │ 2006 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Darjeeling Limited, The (2007)"                                         │ 2007 │ 3.0    │ 2015-11-06 │
+│ Adell Gusikowski │ "Dark Knight Rises, The (2012)"                                          │ 2012 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Dark Knight, The (2008)"                                                │ 2008 │ 3.5    │ 2015-11-03 │
+│ Adell Gusikowski │ "Day After Tomorrow, The (2004)"                                         │ 2004 │ 3.0    │ 2015-11-05 │
+│ Adell Gusikowski │ "Decalogue, The (Dekalog) (1989)"                                        │ 1989 │ 5.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Deer Hunter, The (1978)"                                                │ 1978 │ 4.0    │ 2015-11-22 │
+│ Adell Gusikowski │ "Departed, The (2006)"                                                   │ 2006 │ 5.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Devil Wears Prada, The (2006)"                                          │ 2006 │ 3.5    │ 2015-11-05 │
+│ Adell Gusikowski │ "Diamond Arm, The (Brilliantovaya ruka) (1968)"                          │ 1968 │ 4.5    │ 2015-11-05 │
+│ Adell Gusikowski │ "Dictator, The (2012)"                                                   │ 2012 │ 4.0    │ 2015-11-15 │
+│ Adell Gusikowski │ "Dude, Where's My Car? (2000)"                                           │ 2000 │ 3.5    │ 2015-11-05 │
+│ Adell Gusikowski │ "Fall, The (2006)"                                                       │ 2006 │ 3.5    │ 2015-11-03 │
+│ Adell Gusikowski │ "Family Man, The (2000)"                                                 │ 2000 │ 3.0    │ 2015-11-05 │
+│ Adell Gusikowski │ "Fantastic Planet, The (Planète sauvage, La) (1973)"                     │ 1973 │ 5.0    │ 2015-11-22 │
+│ Adell Gusikowski │ "Fast & Furious (Fast and the Furious 4, The) (2009)"                    │ 2009 │ 4.0    │ 2015-11-04 │
+│ Adell Gusikowski │ "Fast and the Furious, The (2001)"                                       │ 2001 │ 4.0    │ 2015-11-03 │
+│ Adell Gusikowski │ "Fighter, The (2010)"                                                    │ 2010 │ 4.0    │ 2015-11-03 │
+└──────────────────┴──────────────────────────────────────────────────────────────────────────┴──────┴────────┴────────────┘
+ 
+4. Вывести список фильмов с указанием тегов, которые были им присвоены пользователями. Сортировать по году выпуска, затем по названию фильма, затем по тегу. В списке оставить первые 40 записей.
+--------------------------------------------------
+SELECT title, tag FROM tags INNER JOIN movies ON movie_id=movies.id ORDER BY year, title, tag LIMIT 40;
+┌────────────────────────────────────────────────────────────────────┬───────────────────────┐
+│                               title                                │          tag          │
+├────────────────────────────────────────────────────────────────────┼───────────────────────┤
+│ Paterson                                                           │ quirky                │
+│ Paterson                                                           │ sweet                 │
+│ Paterson                                                           │ understated           │
+│ "Kid, The (1921)"                                                  │ orphans               │
+│ "Nosferatu (Nosferatu, eine Symphonie des Grauens) (1922)"         │ vampires              │
+│ Our Hospitality (1923)                                             │ In Netflix queue      │
+│ Safety Last! (1923)                                                │ Clock                 │
+│ Greed (1924)                                                       │ gold                  │
+│ "Gold Rush, The (1925)"                                            │ mining                │
+│ Faust (1926)                                                       │ In Netflix queue      │
+│ College (1927)                                                     │ In Netflix queue      │
+│ "Circus, The (1928)"                                               │ big top               │
+│ "Circus, The (1928)"                                               │ circus                │
+│ "Passion of Joan of Arc, The (Passion de Jeanne d'Arc, La) (1928)" │ saint                 │
+│ "Andalusian Dog, An (Chien andalou, Un) (1929)"                    │ mindfuck              │
+│ "Andalusian Dog, An (Chien andalou, Un) (1929)"                    │ surreal               │
+│ "Andalusian Dog, An (Chien andalou, Un) (1929)"                    │ surrealism            │
+│ "Blue Angel, The (Blaue Engel, Der) (1930)"                        │ nightclub             │
+│ "Blue Angel, The (Blaue Engel, Der) (1930)"                        │ singers               │
+│ "Divorcee, The (1930)"                                             │ divorce               │
+│ "Maltese Falcon, The (a.k.a. Dangerous Female) (1931)"             │ heist                 │
+│ City Lights (1931)                                                 │ blind                 │
+│ Frankenstein (1931)                                                │ In Netflix queue      │
+│ M (1931)                                                           │ atmospheric           │
+│ M (1931)                                                           │ chilly                │
+│ M (1931)                                                           │ creepy                │
+│ M (1931)                                                           │ menacing              │
+│ M (1931)                                                           │ mental illness        │
+│ M (1931)                                                           │ oninous               │
+│ M (1931)                                                           │ serial killer         │
+│ "Farewell to Arms, A (1932)"                                       │ Hemingway             │
+│ Freaks (1932)                                                      │ circus                │
+│ Horse Feathers (1932)                                              │ Marx brothers         │
+│ "Invisible Man, The (1933)"                                        │ invisibility          │
+│ Flying Down to Rio (1933)                                          │ Astaire and Rogers    │
+│ "Gay Divorcee, The (1934)"                                         │ divorce               │
+│ "Thin Man, The (1934)"                                             │ Nick and Nora Charles │
+│ It Happened One Night (1934)                                       │ Screwball             │
+│ Twentieth Century (1934)                                           │ In Netflix queue      │
+│ "39 Steps, The (1935)"                                             │ fugitive              │
+└────────────────────────────────────────────────────────────────────┴───────────────────────┘
+ 
+5. Вывести список самых свежих фильмов. В список должны войти все фильмы последнего года выпуска, имеющиеся в базе данных. Запрос должен быть универсальным, не зависящим от исходных данных (нужный год выпуска должен определяться в запросе, а не жестко задаваться).
+--------------------------------------------------
+SELECT title FROM movies WHERE year=(select max(year) FROM movies);
+┌───────────────────────────────────────────┐
+│                   title                   │
+├───────────────────────────────────────────┤
+│ Avengers: Infinity War - Part I (2018)    │
+│ Annihilation (2018)                       │
+│ The Commuter (2018)                       │
+│ Insidious: The Last Key (2018)            │
+│ Game Night (2018)                         │
+│ Maze Runner: The Death Cure (2018)        │
+│ Isle of Dogs (2018)                       │
+│ The Clapper (2018)                        │
+│ Tom Segura: Disgraceful (2018)            │
+│ When We First Met (2018)                  │
+│ The Cloverfield Paradox (2018)            │
+│ Tomb Raider (2018)                        │
+│ Fred Armisen: Standup for Drummers (2018) │
+│ Death Wish (2018)                         │
+│ A Wrinkle in Time (2018)                  │
+│ "Love, Simon (2018)"                      │
+│ A Quiet Place (2018)                      │
+│ Alpha (2018)                              │
+│ I Kill Giants (2018)                      │
+│ "Game Over, Man! (2018)"                  │
+│ Blockers (2018)                           │
+│ Pacific Rim: Uprising (2018)              │
+│ Rampage (2018)                            │
+│ Jurassic World: Fallen Kingdom (2018)     │
+│ Incredibles 2 (2018)                      │
+│ Deadpool 2 (2018)                         │
+│ Solo: A Star Wars Story (2018)            │
+│ Won't You Be My Neighbor? (2018)          │
+│ Sorry to Bother You (2018)                │
+│ Ant-Man and the Wasp (2018)               │
+│ Dogman (2018)                             │
+│ Mamma Mia: Here We Go Again! (2018)       │
+│ Tag (2018)                                │
+│ The Man Who Killed Don Quixote (2018)     │
+│ Boundaries (2018)                         │
+│ Spiral (2018)                             │
+│ Mission: Impossible - Fallout (2018)      │
+│ SuperFly (2018)                           │
+│ BlacKkKlansman (2018)                     │
+│ The Darkest Minds (2018)                  │
+│ Bungo Stray Dogs: Dead Apple (2018)       │
+└───────────────────────────────────────────┘
+ 
+6. Найти все драмы, выпущенные после 2005 года, которые понравились женщинам (оценка не ниже 4.5). Для каждого фильма в этом списке вывести название, год выпуска и количество таких оценок. Результат отсортировать по году выпуска и названию фильма.
+--------------------------------------------------
+select title, year, count(title) from movies inner join ratings on movies.id=ratings.movie_id inner join users on users.id=ratings.user_id where ratings.rating>=4.5 and gender='female' and instr(movies.genres, 'Drama')!=0 and year>2005 group by title order by year, title;
+┌────────────────────────────────────────────────────────────────────────┬──────┬──────────────┐
+│                                 title                                  │ year │ count(title) │
+├────────────────────────────────────────────────────────────────────────┼──────┼──────────────┤
+│ "Departed, The (2006)"                                                 │ 2006 │ 7            │
+│ "Devil Wears Prada, The (2006)"                                        │ 2006 │ 1            │
+│ "Girl Who Leapt Through Time, The (Toki o kakeru shôjo) (2006)"        │ 2006 │ 1            │
+│ "Last Kiss, The (2006)"                                                │ 2006 │ 1            │
+│ "Pan's Labyrinth (Laberinto del fauno, El) (2006)"                     │ 2006 │ 3            │
+│ "Prestige, The (2006)"                                                 │ 2006 │ 5            │
+│ "Pursuit of Happyness, The (2006)"                                     │ 2006 │ 3            │
+│ "Three Burials of Melquiades Estrada, The (2006)"                      │ 2006 │ 1            │
+│ Away from Her (2006)                                                   │ 2006 │ 1            │
+│ Babel (2006)                                                           │ 2006 │ 2            │
+│ Cashback (2006)                                                        │ 2006 │ 1            │
+│ Children of Men (2006)                                                 │ 2006 │ 3            │
+│ I Served the King of England (Obsluhoval jsem anglického krále) (2006) │ 2006 │ 1            │
+│ Inside Man (2006)                                                      │ 2006 │ 1            │
+│ Jesus Camp (2006)                                                      │ 2006 │ 1            │
+│ Little Children (2006)                                                 │ 2006 │ 1            │
+│ Little Miss Sunshine (2006)                                            │ 2006 │ 2            │
+│ Lucky Number Slevin (2006)                                             │ 2006 │ 2            │
+│ My Love (2006)                                                         │ 2006 │ 1            │
+│ Smokin' Aces (2006)                                                    │ 2006 │ 1            │
+│ Thank You for Smoking (2006)                                           │ 2006 │ 2            │
+│ This Is England (2006)                                                 │ 2006 │ 1            │
+│ 3:10 to Yuma (2007)                                                    │ 2007 │ 1            │
+│ 5 Centimeters per Second (Byôsoku 5 senchimêtoru) (2007)               │ 2007 │ 1            │
+│ American Gangster (2007)                                               │ 2007 │ 1            │
+│ Breach (2007)                                                          │ 2007 │ 1            │
+│ Control (2007)                                                         │ 2007 │ 1            │
+│ Dan in Real Life (2007)                                                │ 2007 │ 1            │
+│ Disturbia (2007)                                                       │ 2007 │ 1            │
+│ Eastern Promises (2007)                                                │ 2007 │ 3            │
+│ Fracture (2007)                                                        │ 2007 │ 1            │
+│ Gone Baby Gone (2007)                                                  │ 2007 │ 1            │
+│ Harry Potter and the Order of the Phoenix (2007)                       │ 2007 │ 1            │
+│ Into the Wild (2007)                                                   │ 2007 │ 4            │
+│ Knocked Up (2007)                                                      │ 2007 │ 1            │
+│ Like Stars on Earth (Taare Zameen Par) (2007)                          │ 2007 │ 1            │
+│ Michael Clayton (2007)                                                 │ 2007 │ 1            │
+│ Mr. Brooks (2007)                                                      │ 2007 │ 1            │
+│ No Country for Old Men (2007)                                          │ 2007 │ 2            │
+│ Persepolis (2007)                                                      │ 2007 │ 1            │
+│ Ratatouille (2007)                                                     │ 2007 │ 2            │
+│ There Will Be Blood (2007)                                             │ 2007 │ 3            │
+│ Waitress (2007)                                                        │ 2007 │ 1            │
+│ Zodiac (2007)                                                          │ 2007 │ 2            │
+│ "Dark Knight, The (2008)"                                              │ 2008 │ 14           │
+│ "Definitely, Maybe (2008)"                                             │ 2008 │ 1            │
+│ "Hurt Locker, The (2008)"                                              │ 2008 │ 1            │
+│ "Stoning of Soraya M., The (2008)"                                     │ 2008 │ 1            │
+│ Berlin Calling (2008)                                                  │ 2008 │ 1            │
+│ Dr. Horrible's Sing-Along Blog (2008)                                  │ 2008 │ 1            │
+│ Front of the Class (2008)                                              │ 2008 │ 1            │
+│ Frost/Nixon (2008)                                                     │ 2008 │ 1            │
+│ Gran Torino (2008)                                                     │ 2008 │ 3            │
+│ Hunger (2008)                                                          │ 2008 │ 1            │
+│ In Bruges (2008)                                                       │ 2008 │ 1            │
+│ Ip Man (2008)                                                          │ 2008 │ 1            │
+│ Slumdog Millionaire (2008)                                             │ 2008 │ 2            │
+│ Strictly Sexual (2008)                                                 │ 2008 │ 1            │
+│ Taken (2008)                                                           │ 2008 │ 1            │
+│ Twilight (2008)                                                        │ 2008 │ 2            │
+│ "Blind Side, The  (2009)"                                              │ 2009 │ 2            │
+│ "Boondock Saints II: All Saints Day, The (2009)"                       │ 2009 │ 1            │
+│ "Education, An (2009)"                                                 │ 2009 │ 1            │
+│ "Girl Who Played with Fire, The (Flickan som lekte med elden) (2009)"  │ 2009 │ 1            │
+│ "Girl with the Dragon Tattoo, The (Män som hatar kvinnor) (2009)"      │ 2009 │ 3            │
+│ "Imaginarium of Doctor Parnassus, The (2009)"                          │ 2009 │ 1            │
+│ "Ugly Truth, The (2009)"                                               │ 2009 │ 1            │
+│ "White Ribbon, The (Das weiße Band) (2009)"                            │ 2009 │ 1            │
+│ (500) Days of Summer (2009)                                            │ 2009 │ 1            │
+│ 3 Idiots (2009)                                                        │ 2009 │ 1            │
+│ Angels & Demons (2009)                                                 │ 2009 │ 1            │
+│ Antichrist (2009)                                                      │ 2009 │ 1            │
+│ Inglourious Basterds (2009)                                            │ 2009 │ 5            │
+│ Mary and Max (2009)                                                    │ 2009 │ 1            │
+│ Moon (2009)                                                            │ 2009 │ 1            │
+│ Ninja Assassin (2009)                                                  │ 2009 │ 1            │
+│ Pirate Radio (2009)                                                    │ 2009 │ 1            │
+│ Up (2009)                                                              │ 2009 │ 4            │
+│ Watchmen (2009)                                                        │ 2009 │ 1            │
+│ "Book of Eli, The (2010)"                                              │ 2010 │ 1            │
+│ "Fighter, The (2010)"                                                  │ 2010 │ 1            │
+│ "King's Speech, The (2010)"                                            │ 2010 │ 3            │
+│ "Next Three Days, The (2010)"                                          │ 2010 │ 1            │
+│ "Social Network, The (2010)"                                           │ 2010 │ 1            │
+│ Biutiful (2010)                                                        │ 2010 │ 1            │
+│ Black Swan (2010)                                                      │ 2010 │ 1            │
+│ Four Lions (2010)                                                      │ 2010 │ 1            │
+│ Inception (2010)                                                       │ 2010 │ 11           │
+│ Shutter Island (2010)                                                  │ 2010 │ 5            │
+│ Temple Grandin (2010)                                                  │ 2010 │ 1            │
+│ The Pacific (2010)                                                     │ 2010 │ 1            │
+│ "Best Exotic Marigold Hotel, The (2011)"                               │ 2011 │ 1            │
+│ "Crazy, Stupid, Love. (2011)"                                          │ 2011 │ 1            │
+│ "Girl with the Dragon Tattoo, The (2011)"                              │ 2011 │ 1            │
+│ "Help, The (2011)"                                                     │ 2011 │ 1            │
+│ "Lincoln Lawyer, The (2011)"                                           │ 2011 │ 1            │
+│ "Mechanic, The (2011)"                                                 │ 2011 │ 1            │
+│ Colombiana (2011)                                                      │ 2011 │ 1            │
+│ From Up on Poppy Hill (Kokuriko-zaka kara) (2011)                      │ 2011 │ 1            │
+│ Goon (2011)                                                            │ 2011 │ 1            │
+│ Harry Potter and the Deathly Hallows: Part 2 (2011)                    │ 2011 │ 1            │
+│ Intouchables (2011)                                                    │ 2011 │ 3            │
+│ Melancholia (2011)                                                     │ 2011 │ 1            │
+│ Moneyball (2011)                                                       │ 2011 │ 1            │
+│ Rise of the Planet of the Apes (2011)                                  │ 2011 │ 1            │
+│ The Artist (2011)                                                      │ 2011 │ 1            │
+│ Thor (2011)                                                            │ 2011 │ 1            │
+│ Tinker Tailor Soldier Spy (2011)                                       │ 2011 │ 2            │
+│ Warrior (2011)                                                         │ 2011 │ 1            │
+│ "Hunt, The (Jagten) (2012)"                                            │ 2012 │ 1            │
+│ "Impossible, The (Imposible, Lo) (2012)"                               │ 2012 │ 1            │
+│ "Perks of Being a Wallflower, The (2012)"                              │ 2012 │ 1            │
+│ Broken (2012)                                                          │ 2012 │ 1            │
+│ Django Unchained (2012)                                                │ 2012 │ 3            │
+│ Ernest & Célestine (Ernest et Célestine) (2012)                        │ 2012 │ 1            │
+│ Silver Linings Playbook (2012)                                         │ 2012 │ 1            │
+│ Taken 2 (2012)                                                         │ 2012 │ 1            │
+│ The Hunger Games (2012)                                                │ 2012 │ 1            │
+│ Zero Dark Thirty (2012)                                                │ 2012 │ 1            │
+│ "Great Beauty, The (Grande Bellezza, La) (2013)"                       │ 2013 │ 1            │
+│ "Great Gatsby, The (2013)"                                             │ 2013 │ 1            │
+│ "Secret Life of Walter Mitty, The (2013)"                              │ 2013 │ 1            │
+│ "Wolf of Wall Street, The (2013)"                                      │ 2013 │ 3            │
+│ About Time (2013)                                                      │ 2013 │ 1            │
+│ Captain Phillips (2013)                                                │ 2013 │ 1            │
+│ Dallas Buyers Club (2013)                                              │ 2013 │ 1            │
+│ Filth (2013)                                                           │ 2013 │ 1            │
+│ Her (2013)                                                             │ 2013 │ 2            │
+│ Legend No. 17 (2013)                                                   │ 2013 │ 1            │
+│ Nymphomaniac: Volume I (2013)                                          │ 2013 │ 1            │
+│ Nymphomaniac: Volume II (2013)                                         │ 2013 │ 1            │
+│ Prisoners (2013)                                                       │ 2013 │ 1            │
+│ Rush (2013)                                                            │ 2013 │ 1            │
+│ Tangerines (2013)                                                      │ 2013 │ 1            │
+│ "Grand Budapest Hotel, The (2014)"                                     │ 2014 │ 2            │
+│ Frank (2014)                                                           │ 2014 │ 1            │
+│ Gone Girl (2014)                                                       │ 2014 │ 1            │
+│ Love & Mercy (2014)                                                    │ 2014 │ 1            │
+│ Nightcrawler (2014)                                                    │ 2014 │ 1            │
+│ PK (2014)                                                              │ 2014 │ 1            │
+│ The Fool (2014)                                                        │ 2014 │ 1            │
+│ The Hundred-Foot Journey (2014)                                        │ 2014 │ 1            │
+│ The Imitation Game (2014)                                              │ 2014 │ 4            │
+│ The Theory of Everything (2014)                                        │ 2014 │ 1            │
+│ Whiplash (2014)                                                        │ 2014 │ 2            │
+│ Wild Tales (2014)                                                      │ 2014 │ 1            │
+│ "Big Short, The (2015)"                                                │ 2015 │ 3            │
+│ Ex Machina (2015)                                                      │ 2015 │ 1            │
+│ Experimenter (2015)                                                    │ 2015 │ 1            │
+│ Inside Out (2015)                                                      │ 2015 │ 1            │
+│ Straight Outta Compton (2015)                                          │ 2015 │ 2            │
+│ The Martian (2015)                                                     │ 2015 │ 3            │
+│ The Revenant (2015)                                                    │ 2015 │ 1            │
+│ Victor Frankenstein (2015)                                             │ 2015 │ 1            │
+│ 13 Hours (2016)                                                        │ 2016 │ 1            │
+│ Hacksaw Ridge (2016)                                                   │ 2016 │ 1            │
+│ Lion (2016)                                                            │ 2016 │ 1            │
+│ Sherlock: The Abominable Bride (2016)                                  │ 2016 │ 2            │
+│ Snowden (2016)                                                         │ 2016 │ 2            │
+│ Your Name. (2016)                                                      │ 2016 │ 1            │
+│ "Three Billboards Outside Ebbing, Missouri (2017)"                     │ 2017 │ 1            │
+│ Loving Vincent (2017)                                                  │ 2017 │ 1            │
+│ Rough Night (2017)                                                     │ 2017 │ 1            │
+└────────────────────────────────────────────────────────────────────────┴──────┴──────────────┘
+ 
+7. Провести анализ востребованности ресурса - вывести количество пользователей, регистрировавшихся на сайте в каждом году. Найти, в каких годах регистрировалось больше всего и меньше всего пользователей.
+--------------------------------------------------
+SELECT year, num as 'Users number' from (select strftime('%Y', register_date) as 'year', count(*) as 'num' from users group by strftime('%Y', register_date));
+┌──────┬──────────────┐
+│ year │ Users number │
+├──────┼──────────────┤
+│ 2005 │ 59           │
+│ 2006 │ 63           │
+│ 2007 │ 61           │
+│ 2008 │ 59           │
+│ 2009 │ 56           │
+│ 2010 │ 59           │
+│ 2011 │ 59           │
+│ 2012 │ 52           │
+│ 2013 │ 57           │
+│ 2014 │ 53           │
+│ 2015 │ 55           │
+│ 2016 │ 58           │
+│ 2017 │ 80           │
+│ 2018 │ 48           │
+│ 2019 │ 57           │
+│ 2020 │ 63           │
+│ 2021 │ 4            │
+└──────┴──────────────┘
+SELECT case num 
+	when max(num) then num 
+	end 'Highest number of users',
+year from (select strftime('%Y', register_date) as 'year', count(*) as 'num' from users group by strftime('%Y', register_date));
+┌─────────────────────────┬──────┐
+│ Highest number of users │ year │
+├─────────────────────────┼──────┤
+│ 80                      │ 2017 │
+└─────────────────────────┴──────┘
+SELECT case num 
+	when min(num) 
+	then num end 'Lowest number of users', 
+year from (select strftime('%Y', register_date) as 'year', count(*) as 'num' from users group by strftime('%Y', register_date));
+┌────────────────────────┬──────┐
+│ Lowest number of users │ year │
+├────────────────────────┼──────┤
+│ 4                      │ 2021 │
+└────────────────────────┴──────┘
+ 
