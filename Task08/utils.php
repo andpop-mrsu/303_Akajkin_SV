@@ -56,3 +56,4 @@ function getEducationalDirections(): array {
     $statement->closeCursor();
     return $educationalDirections;
 }
+
